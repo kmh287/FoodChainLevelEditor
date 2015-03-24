@@ -173,8 +173,8 @@ public class EditorMode implements Screen{
 			filename = JOptionPane.showInputDialog("Specify a filename");
 			if (filename != null){
 				save(filename);
+				initializeDefaultMap();
 			}
-			initializeDefaultMap();
 			//System.out.println("New map, yes save");
 			break;
 		case SAVE:
