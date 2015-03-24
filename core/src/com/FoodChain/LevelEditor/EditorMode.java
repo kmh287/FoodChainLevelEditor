@@ -13,6 +13,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
 
@@ -27,6 +28,15 @@ public class EditorMode implements Screen{
 	private mode currentMode;
 	private Vector2 tmp;
 	
+	private String BLACKBAR = "assets/blackbar.png";
+	private Texture blackbar_tex;
+	
+	private void LoadContent(AssetManager manager){
+		manager.load(BLACKBAR, Texture.class);
+		manager.finishLoading();
+		blackbar_tex = (Texture) ((manager.isLoaded(BLACKBAR)) ? manager.get(BLACKBAR) : null);
+	}
+	
     //Number of tree tiles to add to the boundary
     int BOUNDARY_TREE_TILES = 10;
 	
@@ -34,6 +44,7 @@ public class EditorMode implements Screen{
 		this.canvas = canvas;
 		assetManager = new AssetManager();
 		initializeDefaultMap();
+		LoadContent(assetManager);
 		map.LoadContent(assetManager);
 		Actor.LoadContent(assetManager);
 		tmp = new Vector2();
@@ -279,6 +290,7 @@ public class EditorMode implements Screen{
 	
 	public void draw(float delta){
 		canvas.begin();
+		canvas.draw(blackbar_tex, 0, 0);
 		map.draw(canvas);
 		Actor.draw(canvas, map);
 		canvas.end();

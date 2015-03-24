@@ -99,18 +99,6 @@ public class GameMap {
     								  	N_DIRT, NE_DIRT, E_DIRT, SE_DIRT,
     								  	S_DIRT, SW_DIRT, W_DIRT, NW_DIRT};
     		
-    		Texture textureArray[] = 	{grassTexture, bushTexture, treeTexture, waterTexture, 
-    									 dirtTexture, waterNTexture, waterNETexture, waterETexture,
-    									 waterSETexture, waterSTexture, waterSWTexture, waterWTexture,
-    									 waterNWTexture, dirtNTexture, dirtNETexture, dirtETexture,
-    									 dirtSETexture, dirtSTexture, dirtSWTexture, dirtWTexture,
-    									 dirtNWTexture};
-
-    		if (textureNameArray.length != textureArray.length){
-    			System.out.println("Texture arrays not formed correctly in GameMap, exiting.");
-    			System.exit(-1);
-    		}
-    		
     		for (int i = 0; i < textureNameArray.length; ++i){
     			 manager.load(textureNameArray[i],Texture.class);
     		}
