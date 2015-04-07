@@ -11,7 +11,9 @@ import javax.swing.JPanel;
 
 public class MainUI extends JFrame implements ActionListener  {
 
-	public enum command{NO_ACTION, NEW_NOSAVE, NEW_SAVE, SAVE, LOAD, TILE_MODE, ACTOR_MODE}
+	public enum command{NO_ACTION, NEW_NOSAVE, NEW_SAVE, 
+						SAVE, LOAD, TILE_MODE, ACTOR_MODE,
+						PATROL_MODE}
 	
 	private static final long serialVersionUID = 1L;
 	private JPanel mainPanel;
@@ -20,6 +22,7 @@ public class MainUI extends JFrame implements ActionListener  {
 	private JButton load;
 	private JButton tileMode;
 	private JButton actorMode;
+	private JButton patrolMode;
 	
 	private command com;
 	
@@ -32,15 +35,18 @@ public class MainUI extends JFrame implements ActionListener  {
 		load			= new JButton("Load");
 		tileMode 	= new JButton("Tile mode");
 		actorMode	= new JButton("Actor mode");
+		patrolMode  = new JButton("Patrol mode");
 		
-		mainPanel.add(newMap);		mainPanel.add(save);	 	mainPanel.add(load);
-		mainPanel.add(tileMode);		mainPanel.add(actorMode);
+		mainPanel.add(newMap);		mainPanel.add(save);	 	
+		mainPanel.add(load);			mainPanel.add(tileMode);		
+		mainPanel.add(actorMode); 	mainPanel.add(patrolMode);
 		
 		newMap		.addActionListener(this);
 		save			.addActionListener(this);
 		load			.addActionListener(this);
 		tileMode		.addActionListener(this);
 		actorMode	.addActionListener(this);
+		patrolMode 	.addActionListener(this);
 		
 		this.add(mainPanel);
 		
@@ -83,6 +89,9 @@ public class MainUI extends JFrame implements ActionListener  {
 		}
 		else if (arg0.getSource() == actorMode){
 			this.com = command.ACTOR_MODE;
+		}
+		else if (arg0.getSource() == patrolMode){
+			this.com = command.PATROL_MODE;
 		}
 	}
 

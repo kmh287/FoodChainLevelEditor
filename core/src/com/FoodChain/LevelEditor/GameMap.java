@@ -51,15 +51,15 @@ public class GameMap {
     private static final String W_SHORE = "assets/waterW.png";
     private static final String NW_SHORE = "assets/waterNW.png";
     
-    //Dirt boundaries
-    private static final String N_DIRT = "assets/dirtN.png";
-    private static final String NE_DIRT = "assets/dirtNE.png";
-    private static final String E_DIRT = "assets/dirtE.png";
-    private static final String SE_DIRT = "assets/dirtSE.png";
-    private static final String S_DIRT = "assets/dirtS.png";
-    private static final String SW_DIRT = "assets/dirtSW.png";
-    private static final String W_DIRT = "assets/dirtW.png";
-    private static final String NW_DIRT = "assets/dirtNW.png";
+    //Grass boundaries
+    private static final String N_GRASS = "assets/grassN.png";
+    private static final String NE_GRASS = "assets/grassNE.png";
+    private static final String E_GRASS = "assets/grassE.png";
+    private static final String SE_GRASS = "assets/grassSE.png";
+    private static final String S_GRASS = "assets/grassS.png";
+    private static final String SW_GRASS = "assets/grassSW.png";
+    private static final String W_GRASS = "assets/grassW.png";
+    private static final String NW_GRASS = "assets/grassNW.png";
     
     //Texture objects
     protected static Texture grassTexture;
@@ -77,14 +77,14 @@ public class GameMap {
     protected static Texture waterWTexture;
     protected static Texture waterNWTexture;
     
-    protected static Texture dirtNTexture;
-    protected static Texture dirtNETexture;
-    protected static Texture dirtETexture;
-    protected static Texture dirtSETexture;
-    protected static Texture dirtSTexture;
-    protected static Texture dirtSWTexture;
-    protected static Texture dirtWTexture;
-    protected static Texture dirtNWTexture;
+    protected static Texture grassNTexture;
+    protected static Texture grassNETexture;
+    protected static Texture grassETexture;
+    protected static Texture grassSETexture;
+    protected static Texture grassSTexture;
+    protected static Texture grassSWTexture;
+    protected static Texture grassWTexture;
+    protected static Texture grassNWTexture;
     
     /**
      * Load all of the tile textures for this map.
@@ -94,10 +94,10 @@ public class GameMap {
         // Load the tiles
     	
     		String textureNameArray[] = {GRASS_TEX, BUSH_TEX, TREE_TEX, WATER_TEX, DIRT_TEX,
-    								  	N_SHORE, NE_SHORE, E_SHORE, SW_SHORE,
+    								  	N_SHORE, NE_SHORE, E_SHORE, SE_SHORE,
     								  	S_SHORE, SW_SHORE, W_SHORE, NW_SHORE,
-    								  	N_DIRT, NE_DIRT, E_DIRT, SE_DIRT,
-    								  	S_DIRT, SW_DIRT, W_DIRT, NW_DIRT};
+    								  	N_GRASS, NE_GRASS, E_GRASS, SE_GRASS,
+    								  	S_GRASS, SW_GRASS, W_GRASS, NW_GRASS};
     		
     		for (int i = 0; i < textureNameArray.length; ++i){
     			 manager.load(textureNameArray[i],Texture.class);
@@ -118,14 +118,14 @@ public class GameMap {
         waterSWTexture 	= (Texture) (manager.isLoaded(SW_SHORE) ? manager.get(SW_SHORE) : null);
         waterWTexture 	= (Texture) (manager.isLoaded(W_SHORE) ? manager.get(W_SHORE) : null);
         waterNWTexture 	= (Texture) (manager.isLoaded(NW_SHORE) ? manager.get(NW_SHORE) : null);
-        dirtNTexture 	= (Texture) (manager.isLoaded(N_DIRT) ? manager.get(N_DIRT) : null);
-        dirtNETexture 	= (Texture) (manager.isLoaded(NE_DIRT) ? manager.get(NE_DIRT) : null);
-        dirtETexture 	= (Texture) (manager.isLoaded(E_DIRT) ? manager.get(E_DIRT) : null);
-        dirtSETexture 	= (Texture) (manager.isLoaded(SE_DIRT) ? manager.get(SE_DIRT) : null);
-        dirtSTexture 	= (Texture) (manager.isLoaded(S_DIRT) ? manager.get(S_DIRT) : null);
-        dirtSWTexture 	= (Texture) (manager.isLoaded(SW_DIRT) ? manager.get(SW_DIRT) : null);
-        dirtWTexture 	= (Texture) (manager.isLoaded(W_DIRT) ? manager.get(W_DIRT) : null);
-        dirtNWTexture 	= (Texture) (manager.isLoaded(NW_DIRT) ? manager.get(NW_DIRT) : null);
+        grassNTexture 	= (Texture) (manager.isLoaded(N_GRASS) ? manager.get(N_GRASS) : null);
+        grassNETexture 	= (Texture) (manager.isLoaded(NE_GRASS) ? manager.get(NE_GRASS) : null);
+        grassETexture 	= (Texture) (manager.isLoaded(E_GRASS) ? manager.get(E_GRASS) : null);
+        grassSETexture 	= (Texture) (manager.isLoaded(SE_GRASS) ? manager.get(SE_GRASS) : null);
+        grassSTexture 	= (Texture) (manager.isLoaded(S_GRASS) ? manager.get(S_GRASS) : null);
+        grassSWTexture 	= (Texture) (manager.isLoaded(SW_GRASS) ? manager.get(SW_GRASS) : null);
+        grassWTexture 	= (Texture) (manager.isLoaded(W_GRASS) ? manager.get(W_GRASS) : null);
+        grassNWTexture 	= (Texture) (manager.isLoaded(NW_GRASS) ? manager.get(NW_GRASS) : null);
         
  
     }
@@ -168,6 +168,8 @@ public class GameMap {
                 		returnString.append("W");
                 } else if (layout[i][j] == Tile.tileType.DIRT){
                 		returnString.append("D");
+                } else if (layout[i][j] == null){
+                		returnString.append("!");
                 }
                 //Move to next column
                 if (j == layout[0].length-1){
@@ -206,22 +208,22 @@ public class GameMap {
         		return waterWTexture;
         case NW_SHORE:
         		return waterNWTexture;
-        case N_DIRT:
-        		return dirtNTexture;
-        case NE_DIRT:
-        		return dirtNETexture;
-        case E_DIRT:
-        		return dirtETexture;
-        case SE_DIRT:
-        		return dirtSETexture;
-        case S_DIRT:
-        		return dirtSTexture;
-        case SW_DIRT:
-        		return dirtSWTexture;
-        case W_DIRT:
-        		return dirtWTexture;
-        case NW_DIRT:
-        		return dirtNWTexture;
+        case N_GRASS:
+        		return grassNTexture;
+        case NE_GRASS:
+        		return grassNETexture;
+        case E_GRASS:
+        		return grassETexture;
+        case SE_GRASS:
+        		return grassSETexture;
+        case S_GRASS:
+        		return grassSTexture;
+        case SW_GRASS:
+        		return grassSWTexture;
+        case W_GRASS:
+        		return grassWTexture;
+        case NW_GRASS:
+        		return grassNWTexture;
         default:
             return grassTexture;
         }
@@ -301,6 +303,9 @@ public class GameMap {
         for (int i = 0; i < layout.length; ++i){
             for (int j = 0; j < layout[0].length; ++j){
                 Texture tex = getTextureFromTileType(layout[i][j]);
+                if (tex.getWidth() != 40 || tex.getHeight() != 40){
+                		System.out.println(tex.getWidth() + " " +  tex.getHeight());
+                }
                 canvas.draw(tex, mapXToScreen(j), mapYToScreen(i));
             }
         }

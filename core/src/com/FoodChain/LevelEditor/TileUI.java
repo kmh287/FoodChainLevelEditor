@@ -26,14 +26,14 @@ public class TileUI extends JFrame implements ActionListener {
 	private JButton water_sw;
 	private JButton water_w;
 	private JButton water_nw;
-	private JButton dirt_n;
-	private JButton dirt_ne;
-	private JButton dirt_e;
-	private JButton dirt_se;
-	private JButton dirt_s;
-	private JButton dirt_sw;
-	private JButton dirt_w;
-	private JButton dirt_nw;
+	private JButton grass_n;
+	private JButton grass_ne;
+	private JButton grass_e;
+	private JButton grass_se;
+	private JButton grass_s;
+	private JButton grass_sw;
+	private JButton grass_w;
+	private JButton grass_nw;
 	
 	public TileUI(){
 		mainPanel = new JPanel();
@@ -52,22 +52,22 @@ public class TileUI extends JFrame implements ActionListener {
 		water_sw 	= new JButton("WATER_SW");
 		water_w 		= new JButton("WATER_W");
 		water_nw 	= new JButton("WATER_NW");
-		dirt_n 		= new JButton("DIRT_N");
-		dirt_ne 		= new JButton("DIRT_NE");
-		dirt_e 		= new JButton("DIRT_E");
-		dirt_se 		= new JButton("DIRT_SE");
-		dirt_s 		= new JButton("DIRT_S");
-		dirt_sw 		= new JButton("DIRT_SW");
-		dirt_w 		= new JButton("DIRT_W");
-		dirt_nw 		= new JButton("DIRT_NW");
+		grass_n 		= new JButton("GRASS_N");
+		grass_ne 	= new JButton("GRASS_NE");
+		grass_e 		= new JButton("GRASS_E");
+		grass_se 	= new JButton("GRASS_SE");
+		grass_s 		= new JButton("GRASS_S");
+		grass_sw 	= new JButton("GRASS_SW");
+		grass_w 		= new JButton("GRASS_W");
+		grass_nw 	= new JButton("GRASS_NW");
 		
 		mainPanel.add(grass);		mainPanel.add(bush);			mainPanel.add(tree);
 		mainPanel.add(water);		mainPanel.add(dirt);			mainPanel.add(water_n);
 		mainPanel.add(water_ne);		mainPanel.add(water_e);		mainPanel.add(water_se);		
 		mainPanel.add(water_s);		mainPanel.add(water_sw);		mainPanel.add(water_w);
-		mainPanel.add(water_nw);		mainPanel.add(dirt_n);		mainPanel.add(dirt_ne);
-		mainPanel.add(dirt_e);		mainPanel.add(dirt_se);		mainPanel.add(dirt_s);
-		mainPanel.add(dirt_sw);		mainPanel.add(dirt_w);		mainPanel.add(dirt_nw);
+		mainPanel.add(water_nw);		mainPanel.add(grass_n);		mainPanel.add(grass_ne);
+		mainPanel.add(grass_e);		mainPanel.add(grass_se);		mainPanel.add(grass_s);
+		mainPanel.add(grass_sw);		mainPanel.add(grass_w);		mainPanel.add(grass_nw);
 		
 		grass	.addActionListener(this);
 		bush		.addActionListener(this);
@@ -82,14 +82,14 @@ public class TileUI extends JFrame implements ActionListener {
 		water_sw.addActionListener(this);
 		water_w	.addActionListener(this);
 		water_nw.addActionListener(this);
-		dirt_n	.addActionListener(this);
-		dirt_ne	.addActionListener(this);
-		dirt_e	.addActionListener(this);
-		dirt_se	.addActionListener(this);
-		dirt_s	.addActionListener(this);
-		dirt_sw	.addActionListener(this);
-		dirt_w	.addActionListener(this);
-		dirt_nw	.addActionListener(this);
+		grass_n	.addActionListener(this);
+		grass_ne	.addActionListener(this);
+		grass_e	.addActionListener(this);
+		grass_se	.addActionListener(this);
+		grass_s	.addActionListener(this);
+		grass_sw	.addActionListener(this);
+		grass_w	.addActionListener(this);
+		grass_nw	.addActionListener(this);
 		
 		
 		this.add(mainPanel);
@@ -149,41 +149,41 @@ public class TileUI extends JFrame implements ActionListener {
 			System.out.println("WATER_W");
 			selected = Tile.tileType.W_SHORE;
 		}
-		else if (arg0.getSource() == bush){
+		else if (arg0.getSource() == water_nw){
 			System.out.println("WATER_NW");
 			selected = Tile.tileType.NW_SHORE;
 		}
-		else if (arg0.getSource() == dirt_n){
+		else if (arg0.getSource() == grass_n){
 			System.out.println("N_DIRT");
-			selected = Tile.tileType.N_DIRT;
+			selected = Tile.tileType.N_GRASS;
 		}
-		else if (arg0.getSource() == dirt_ne){
+		else if (arg0.getSource() == grass_ne){
 			System.out.println("NE_DIRT");
-			selected = Tile.tileType.NE_DIRT;
+			selected = Tile.tileType.NE_GRASS;
 		}
-		else if (arg0.getSource() == dirt_e){
+		else if (arg0.getSource() == grass_e){
 			System.out.println("E_DIRT");
-			selected = Tile.tileType.E_DIRT;
+			selected = Tile.tileType.E_GRASS;
 		}
-		else if (arg0.getSource() == dirt_se){
+		else if (arg0.getSource() == grass_se){
 			System.out.println("SE_DIRT");
-			selected = Tile.tileType.SE_DIRT;
+			selected = Tile.tileType.SE_GRASS;
 		}
-		else if (arg0.getSource() == dirt_s){
+		else if (arg0.getSource() == grass_s){
 			System.out.println("S_DIRT");
-			selected = Tile.tileType.S_DIRT;
+			selected = Tile.tileType.S_GRASS;
 		}
-		else if (arg0.getSource() == dirt_sw){
+		else if (arg0.getSource() == grass_sw){
 			System.out.println("SW_DIRT");
-			selected = Tile.tileType.SW_DIRT;
+			selected = Tile.tileType.SW_GRASS;
 		}
-		else if (arg0.getSource() == dirt_w){
+		else if (arg0.getSource() == grass_w){
 			System.out.println("W_DIRT");
-			selected = Tile.tileType.W_DIRT;
+			selected = Tile.tileType.W_GRASS;
 		}
-		else if (arg0.getSource() == dirt_nw){
+		else if (arg0.getSource() == grass_nw){
 			System.out.println("NW_DIRT");
-			selected = Tile.tileType.NW_DIRT;
+			selected = Tile.tileType.NW_GRASS;
 		}
 	}
 }

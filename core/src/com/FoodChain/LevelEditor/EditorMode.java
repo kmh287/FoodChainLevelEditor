@@ -18,13 +18,21 @@ import com.badlogic.gdx.math.Vector2;
 
 
 public class EditorMode implements Screen{
+	
+    //Number of tree tiles to add to the boundary
+    private static int BOUNDARY_TREE_TILES = 15;
+    
+    private static int ADD_BOUNDARY_OFFSET = 0;
+    private static int REMOVE_BOUNDARY_OFFSET = 1;
+	
 	private AssetManager assetManager;
 	private GameCanvas canvas;
 	private GameMap map;
 	private TileUI tui;
 	private MainUI mui;
 	private ActorUI aui;
-	private enum mode {NONE, PLACE_TILES, PLACE_ACTORS}
+	private PatrolUI pui;
+	private enum mode {NONE, PLACE_TILES, PLACE_ACTORS, PLACE_PATROLS}
 	private mode currentMode;
 	private Vector2 tmp;
 	
@@ -36,9 +44,6 @@ public class EditorMode implements Screen{
 		manager.finishLoading();
 		blackbar_tex = (Texture) ((manager.isLoaded(BLACKBAR)) ? manager.get(BLACKBAR) : null);
 	}
-	
-    //Number of tree tiles to add to the boundary
-    int BOUNDARY_TREE_TILES = 10;
 	
 	public EditorMode(GameCanvas canvas){
 		this.canvas = canvas;
@@ -70,6 +75,13 @@ public class EditorMode implements Screen{
 		aui.setSize(600,200);
 		aui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		aui.setLocation(0,310);
+		
+		//Patrol ui
+		pui = new PatrolUI();
+		pui.setTitle("Patrol Paths");
+		pui.setSize(300,100);
+		pui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		pui.setLocation(0,310);
 	}
 	
 	private void initializeDefaultMap(){
@@ -126,10 +138,33 @@ public class EditorMode implements Screen{
 		
 		map.setLayout(newLayout);
 	}
+	/**
+	 * Update the actor positions to account for the addition
+	 * of the boundary.
+	 * 
+	 * @param arg 0 if adding the boundary, 1 if removing
+	 * 		  all other ints will cause an exception
+	 */
+	private void updatePositionsForBoundary(int arg){
+		if (arg != 0 && arg != 1) throw new IllegalArgumentException();
+		int offset = (arg == 0) ? BOUNDARY_TREE_TILES : -1*BOUNDARY_TREE_TILES;
+		List<Vector2> coords = map.getCoordinates();
+		Iterator<Vector2> it = coords.iterator();
+		while (it.hasNext()){
+			Vector2 curr = it.next();
+			curr.add(offset, offset);
+		}
+		Vector2 hunterCoords = map.getHunterStartingCoordinate();
+		System.out.println("Original:" + hunterCoords.toString());
+		hunterCoords.add(offset,offset);
+		System.out.println("Final:" + hunterCoords.toString());
+		
+	}
 	
 	private void save(String filename){
 		
 		addBoundary(map);
+		updatePositionsForBoundary(ADD_BOUNDARY_OFFSET);
 		
 		try {
 			//System.out.println(map.toString());
@@ -144,8 +179,11 @@ public class EditorMode implements Screen{
 			e.printStackTrace();
 		}
 		
+		System.out.println(map.toString());
+		
 		//Remove boundary so the editor doesn't freak out
 		removeBoundary(map);
+		updatePositionsForBoundary(REMOVE_BOUNDARY_OFFSET);
 	}
 	
 	private void load(String filename){
@@ -157,8 +195,8 @@ public class EditorMode implements Screen{
 			e.printStackTrace();
 			System.out.println("Problem loading map. Contact Kevin");
 		}
-		//System.out.println(map.toString());
 		removeBoundary(map);
+		updatePositionsForBoundary(REMOVE_BOUNDARY_OFFSET);
 	}
 	
 	private void handleMainUICommand(){
@@ -193,11 +231,19 @@ public class EditorMode implements Screen{
 			currentMode = mode.PLACE_TILES;
 			aui.setVisible(false);
 			tui.setVisible(true);
+			pui.setVisible(false);
 			break;
 		case ACTOR_MODE:
 			currentMode = mode.PLACE_ACTORS;
 			aui.setVisible(true);
 			tui.setVisible(false);
+			pui.setVisible(false);
+			break;
+		case PATROL_MODE:
+			currentMode = mode.PLACE_PATROLS;
+			aui.setVisible(false);
+			tui.setVisible(false);
+			pui.setVisible(true);
 			break;
 		default:
 			//Do nothing
@@ -258,6 +304,7 @@ public class EditorMode implements Screen{
 		int mapX, mapY;
 		if (currentMode == mode.PLACE_TILES){
 			Tile.tileType selected = tui.getSelected();
+			System.out.println(selected);
 			mapX = map.screenXToMap(xPos);
 			mapY = map.screenYToMap(yPos);
 			map.setTileToNewType(mapX, mapY, selected);
