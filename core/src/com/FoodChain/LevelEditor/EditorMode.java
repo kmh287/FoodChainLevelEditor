@@ -155,14 +155,15 @@ public class EditorMode implements Screen{
 			curr.add(offset, offset);
 		}
 		Vector2 hunterCoords = map.getHunterStartingCoordinate();
-		System.out.println("Original:" + hunterCoords.toString());
 		hunterCoords.add(offset,offset);
-		System.out.println("Final:" + hunterCoords.toString());
-		
 	}
 	
 	private void save(String filename){
 		
+		if (map.getHunterStartingCoordinate() == null){
+			JOptionPane.showMessageDialog(null, "No hunter on map. Save aborted");
+			return;
+		}
 		addBoundary(map);
 		updatePositionsForBoundary(ADD_BOUNDARY_OFFSET);
 		
@@ -191,9 +192,9 @@ public class EditorMode implements Screen{
 		try {
 			map = MapManager.GsonToMap(filename);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println("Problem loading map. Contact Kevin");
+			JOptionPane.showMessageDialog(null, "File not found. Load aborted");
+			System.out.println("Problem loading map. Contact Kevin if unresolvable");
+			return;
 		}
 		removeBoundary(map);
 		updatePositionsForBoundary(REMOVE_BOUNDARY_OFFSET);
