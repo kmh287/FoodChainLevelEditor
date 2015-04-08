@@ -324,13 +324,13 @@ public class EditorMode implements Screen{
 					//Add animal
 					List<Actor.actorType> newAnimalList = map.getActorTypeList();
 					newAnimalList.add(selected);
-					map.setActorTypeList(newAnimalList);
+					//map.setActorTypeList(newAnimalList);
 					
 					//Add Coordinate
 					Vector2 newCoordinate = new Vector2(mapX, mapY);
 					List<Vector2> newCoordinates = map.getCoordinates();
 					newCoordinates.add(newCoordinate);
-					map.setCoordinates(newCoordinates);
+					//map.setCoordinates(newCoordinates);
 				}
 			}
 		}

@@ -57,7 +57,7 @@ public class ActorUI extends JFrame implements ActionListener{
 			this.selected = Actor.actorType.WOLF;
 		}
 		else if (arg0.getSource() == owl){
-			System.out.println("Owl not yet implemented.");
+			this.selected = Actor.actorType.OWL;
 		}
 		else if (arg0.getSource() == hunter){
 			this.selected = Actor.actorType.HUNTER;

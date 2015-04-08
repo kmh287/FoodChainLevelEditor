@@ -11,26 +11,31 @@ public abstract class Actor{
 	private static String PIG_TEX = "assets/pig.png";
 	private static String WOLF_TEX = "assets/wolf.png";
 	private static String HUNTER_TEX = "assets/player.png";
+	private static String OWL_TEX = "assets/owl.png";
 	
 	private static Texture pigTexture;
 	private static Texture wolfTexture;
 	private static Texture hunterTexture;
+	private static Texture owlTexture;
 	
     public enum actorType{
     		HUNTER,
 		PIG, 
-		WOLF
+		WOLF,
+		OWL
 	}
     
     public static void LoadContent(AssetManager manager){
     		manager.load(PIG_TEX, Texture.class);
     		manager.load(WOLF_TEX, Texture.class);
     		manager.load(HUNTER_TEX, Texture.class);
+    		manager.load(OWL_TEX, Texture.class);
     		
     		manager.finishLoading();
     		
     		pigTexture = (Texture) (manager.isLoaded(PIG_TEX) ? manager.get(PIG_TEX) : null);
     		wolfTexture = (Texture) (manager.isLoaded(WOLF_TEX) ? manager.get(WOLF_TEX) : null);
+    		owlTexture = (Texture) (manager.isLoaded(OWL_TEX) ? manager.get(OWL_TEX) : null);
     		hunterTexture = (Texture) (manager.isLoaded(HUNTER_TEX) ? manager.get(HUNTER_TEX) : null);
     }
     
@@ -70,6 +75,8 @@ public abstract class Actor{
     			return wolfTexture;
     		case HUNTER:
     			return hunterTexture;
+    		case OWL:
+    			return owlTexture;
     		default:
     			System.out.println("Invalid actor type detected. Contact Kevin.");
     			return null;
