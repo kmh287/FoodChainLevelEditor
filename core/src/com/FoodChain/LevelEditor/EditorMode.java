@@ -31,10 +31,17 @@ public class EditorMode implements Screen{
 	private TileUI tui;
 	private MainUI mui;
 	private ActorUI aui;
-	private PatrolUI pui;
-	private enum mode {NONE, PLACE_TILES, PLACE_ACTORS, PLACE_PATROLS}
+	private enum mode {NONE, PLACE_TILES, PLACE_ACTORS}
 	private mode currentMode;
 	private Vector2 tmp;
+	
+	/**Variables ot handle autosave
+	Autosave happens every 30 seconds
+	Autosaving should not occur if the map has not changed
+	This is so re-opening the editor does not overwirte the
+	autosave.**/
+	int ticks;
+	boolean changed;
 	
 	private String BLACKBAR = "assets/blackbar.png";
 	private Texture blackbar_tex;
@@ -54,6 +61,9 @@ public class EditorMode implements Screen{
 		Actor.LoadContent(assetManager);
 		tmp = new Vector2();
 		
+		ticks = 0;
+		changed = false;
+		
 		//Main UI
 		mui = new MainUI();
 		mui.setTitle("FoodChain Level Editor");
@@ -66,22 +76,15 @@ public class EditorMode implements Screen{
 		tui = new TileUI();
 		tui.setTitle("Tiles");
 		tui.setSize(600,300);
-		tui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//tui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		tui.setLocation(0,0);
 		
 		//Actor UI
 		aui = new ActorUI();
 		aui.setTitle("Actors");
 		aui.setSize(600,200);
-		aui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//aui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		aui.setLocation(0,310);
-		
-		//Patrol ui
-		pui = new PatrolUI();
-		pui.setTitle("Patrol Paths");
-		pui.setSize(300,100);
-		pui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		pui.setLocation(0,310);
 	}
 	
 	private void initializeDefaultMap(){
@@ -160,7 +163,8 @@ public class EditorMode implements Screen{
 	
 	private void save(String filename){
 		
-		if (map.getHunterStartingCoordinate() == null){
+		if (map.getHunterStartingCoordinate() == null &&
+			!filename.equals("autosave")){
 			JOptionPane.showMessageDialog(null, "No hunter on map. Save aborted");
 			return;
 		}
@@ -232,19 +236,13 @@ public class EditorMode implements Screen{
 			currentMode = mode.PLACE_TILES;
 			aui.setVisible(false);
 			tui.setVisible(true);
-			pui.setVisible(false);
+			changed = true;
 			break;
 		case ACTOR_MODE:
 			currentMode = mode.PLACE_ACTORS;
 			aui.setVisible(true);
 			tui.setVisible(false);
-			pui.setVisible(false);
-			break;
-		case PATROL_MODE:
-			currentMode = mode.PLACE_PATROLS;
-			aui.setVisible(false);
-			tui.setVisible(false);
-			pui.setVisible(true);
+			changed = true;
 			break;
 		default:
 			//Do nothing
@@ -292,6 +290,9 @@ public class EditorMode implements Screen{
 	}
 	
 	public void update(float delta){
+//		if (ticks % 1800 == 0 && changed){
+//			save("autosave");
+//		}
 		handleMainUICommand();
 		int xPos = Gdx.input.getX();
 		int yPos = Gdx.graphics.getHeight() - Gdx.input.getY();
