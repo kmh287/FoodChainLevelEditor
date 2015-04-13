@@ -114,75 +114,75 @@ public class TileUI extends JFrame implements ActionListener {
 			selected = Tile.tileType.TREE;
 		}
 		else if (arg0.getSource() == water){
-			System.out.println("WATER");
+			//System.out.println("WATER");
 			selected = Tile.tileType.WATER;
 		}
 		else if (arg0.getSource() == dirt){
-			System.out.println("DIRT");
+			//System.out.println("DIRT");
 			selected = Tile.tileType.DIRT;
 		}
 		else if (arg0.getSource() == water_n){
-			System.out.println("WATER_N");
+			//System.out.println("WATER_N");
 			selected = Tile.tileType.N_SHORE;
 		}
 		else if (arg0.getSource() == water_ne){
-			System.out.println("WATER_NE");
+			//System.out.println("WATER_NE");
 			selected = Tile.tileType.NE_SHORE;
 		}
 		else if (arg0.getSource() == water_e){
-			System.out.println("WATER_E");
+			//System.out.println("WATER_E");
 			selected = Tile.tileType.E_SHORE;
 		}
 		else if (arg0.getSource() == water_se){
-			System.out.println("WATER_SE");
+			//System.out.println("WATER_SE");
 			selected = Tile.tileType.SE_SHORE;
 		}
 		else if (arg0.getSource() == water_s){
-			System.out.println("WATER_S");
+			//System.out.println("WATER_S");
 			selected = Tile.tileType.S_SHORE;
 		}
 		else if (arg0.getSource() == water_sw){
-			System.out.println("WATER_SW");
+			//System.out.println("WATER_SW");
 			selected = Tile.tileType.SW_SHORE;
 		}
 		else if (arg0.getSource() == water_w){
-			System.out.println("WATER_W");
+			//System.out.println("WATER_W");
 			selected = Tile.tileType.W_SHORE;
 		}
 		else if (arg0.getSource() == water_nw){
-			System.out.println("WATER_NW");
+			//System.out.println("WATER_NW");
 			selected = Tile.tileType.NW_SHORE;
 		}
 		else if (arg0.getSource() == grass_n){
-			System.out.println("N_DIRT");
+			//System.out.println("N_DIRT");
 			selected = Tile.tileType.N_GRASS;
 		}
 		else if (arg0.getSource() == grass_ne){
-			System.out.println("NE_DIRT");
+			//System.out.println("NE_DIRT");
 			selected = Tile.tileType.NE_GRASS;
 		}
 		else if (arg0.getSource() == grass_e){
-			System.out.println("E_DIRT");
+			//System.out.println("E_DIRT");
 			selected = Tile.tileType.E_GRASS;
 		}
 		else if (arg0.getSource() == grass_se){
-			System.out.println("SE_DIRT");
+			//System.out.println("SE_DIRT");
 			selected = Tile.tileType.SE_GRASS;
 		}
 		else if (arg0.getSource() == grass_s){
-			System.out.println("S_DIRT");
+			//System.out.println("S_DIRT");
 			selected = Tile.tileType.S_GRASS;
 		}
 		else if (arg0.getSource() == grass_sw){
-			System.out.println("SW_DIRT");
+			//System.out.println("SW_DIRT");
 			selected = Tile.tileType.SW_GRASS;
 		}
 		else if (arg0.getSource() == grass_w){
-			System.out.println("W_DIRT");
+			//System.out.println("W_DIRT");
 			selected = Tile.tileType.W_GRASS;
 		}
 		else if (arg0.getSource() == grass_nw){
-			System.out.println("NW_DIRT");
+			//System.out.println("NW_DIRT");
 			selected = Tile.tileType.NW_GRASS;
 		}
 	}

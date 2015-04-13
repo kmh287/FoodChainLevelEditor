@@ -27,8 +27,10 @@ public class GameMap {
     //Player information that needs to be stored
     //in the map such as the start position and 
     //starting trap
-
     private Vector2 hunterStartPosition = null;
+    
+    //Objective for this level
+    private String objective = null;
     
     //Should be 16 tiles across, and 9 down.
     //Therefore, layout should be [9][16] to match
@@ -143,11 +145,13 @@ public class GameMap {
     public GameMap(Tile.tileType[][] layout,
                    List<Actor.actorType>animals,
                    List<Vector2> coordinates,
-                   Vector2 hunterStartPosition){
+                   Vector2 hunterStartPosition,
+                   String objective){
     		this.layout = layout;
         this.animals = animals;
         this.coordinates = coordinates;
         this.hunterStartPosition = hunterStartPosition;
+        this.objective = objective;
     }
     
     /** Return a string representation of the map
@@ -341,6 +345,14 @@ public class GameMap {
     
     public void setHunterStartingCoordinate(Vector2 coord){
     		this.hunterStartPosition = coord;
+    }
+    
+    public void setObjective(String obj){
+    		this.objective = obj;
+    }
+    
+    public String getObjective(){
+    		return this.objective;
     }
 		
 	public boolean isSafeAt(float xPos, float yPos) {

@@ -31,7 +31,9 @@ public class EditorMode implements Screen{
 	private TileUI tui;
 	private MainUI mui;
 	private ActorUI aui;
-	private enum mode {NONE, PLACE_TILES, PLACE_ACTORS}
+	private ObjectiveUI oui;
+	private String objective;
+	private enum mode {NONE, PLACE_TILES, PLACE_ACTORS, SET_OBJECTIVES}
 	private mode currentMode;
 	private Vector2 tmp;
 	
@@ -64,6 +66,9 @@ public class EditorMode implements Screen{
 		ticks = 0;
 		changed = false;
 		
+		//Default objective is catch 0 pigs and 0 wolves
+		objective = "0&0";
+		
 		//Main UI
 		mui = new MainUI();
 		mui.setTitle("FoodChain Level Editor");
@@ -76,15 +81,19 @@ public class EditorMode implements Screen{
 		tui = new TileUI();
 		tui.setTitle("Tiles");
 		tui.setSize(600,300);
-		//tui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		tui.setLocation(0,0);
 		
 		//Actor UI
 		aui = new ActorUI();
 		aui.setTitle("Actors");
 		aui.setSize(600,200);
-		//aui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		aui.setLocation(0,310);
+		
+		//Objective ui
+		oui = new ObjectiveUI();
+		oui.setTitle("Objectives");
+		oui.setSize(600,200);
+		oui.setLocation(0,310);
 	}
 	
 	private void initializeDefaultMap(){
@@ -97,8 +106,9 @@ public class EditorMode implements Screen{
 		
 		List<Actor.actorType> animals = new ArrayList<Actor.actorType>();
 		List<Vector2> coordinates = new ArrayList<Vector2>();
+		Vector2 defaultHunterStart = new Vector2(16, 8);
 		
-		map = new GameMap(layout, animals, coordinates, null);
+		map = new GameMap(layout, animals, coordinates, defaultHunterStart, objective);
 	}
 	
 	private void addBoundary(GameMap map){
@@ -116,7 +126,6 @@ public class EditorMode implements Screen{
 				if (i < b || j < b || i >= oldMapYLength+b || j >= oldMapXLength+b){
 					newLayout[i][j] = Tile.tileType.TREE;
 				} else {
-					System.out.println("x: " + (j+b) + "y: " + (i+b));
 					newLayout[i][j] = layout[i-b][j-b];
 				}
 			}
@@ -163,8 +172,7 @@ public class EditorMode implements Screen{
 	
 	private void save(String filename){
 		
-		if (map.getHunterStartingCoordinate() == null &&
-			!filename.equals("autosave")){
+		if (map.getHunterStartingCoordinate() == null){
 			JOptionPane.showMessageDialog(null, "No hunter on map. Save aborted");
 			return;
 		}
@@ -184,7 +192,10 @@ public class EditorMode implements Screen{
 			e.printStackTrace();
 		}
 		
-		System.out.println(map.toString());
+		//Don't spam the console for autosaves
+		if (!filename.equals("autosave")){
+			System.out.println(map.toString());
+		}
 		
 		//Remove boundary so the editor doesn't freak out
 		removeBoundary(map);
@@ -232,17 +243,26 @@ public class EditorMode implements Screen{
 				load(filename);
 			}
 			break;
+		case LOAD_AUTOSAVE:
+			load("autosave");
+			break;
 		case TILE_MODE:
 			currentMode = mode.PLACE_TILES;
 			aui.setVisible(false);
 			tui.setVisible(true);
-			changed = true;
+			oui.setVisible(false);
 			break;
 		case ACTOR_MODE:
 			currentMode = mode.PLACE_ACTORS;
 			aui.setVisible(true);
 			tui.setVisible(false);
-			changed = true;
+			oui.setVisible(false);
+			break;
+		case OBJECTIVE_MODE:
+			currentMode = mode.SET_OBJECTIVES;
+			aui.setVisible(false);
+			tui.setVisible(false);
+			oui.setVisible(true);
 			break;
 		default:
 			//Do nothing
@@ -290,10 +310,17 @@ public class EditorMode implements Screen{
 	}
 	
 	public void update(float delta){
-//		if (ticks % 1800 == 0 && changed){
-//			save("autosave");
-//		}
+		if (ticks++ % 1800 == 0 && changed){
+			save("autosave");
+			System.out.println("Autosaving...");
+		}
+		
+		
 		handleMainUICommand();
+		
+		//Update the objective
+		map.setObjective(oui.getObjectiveString());
+		
 		int xPos = Gdx.input.getX();
 		int yPos = Gdx.graphics.getHeight() - Gdx.input.getY();
 		//If the left mouse button isn't being pressed, no need to update anything
@@ -303,10 +330,11 @@ public class EditorMode implements Screen{
 			return;
 		}
 		
+		changed = true;
+		
 		int mapX, mapY;
 		if (currentMode == mode.PLACE_TILES){
 			Tile.tileType selected = tui.getSelected();
-			System.out.println(selected);
 			mapX = map.screenXToMap(xPos);
 			mapY = map.screenYToMap(yPos);
 			map.setTileToNewType(mapX, mapY, selected);
