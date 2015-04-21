@@ -34,7 +34,7 @@ public class MainUI extends JFrame implements ActionListener  {
 		newMap 		  = new JButton("New");
 		save 		  = new JButton("Save");
 		load			  = new JButton("Load");
-		loadAutosave  = new JButton("Resotre from Autosave");
+		loadAutosave  = new JButton("Restore from Autosave");
 		tileMode 	  = new JButton("Tile mode");
 		actorMode	  = new JButton("Actor mode");
 		objectiveMode = new JButton("Objective mode");
