@@ -52,20 +52,15 @@ public class ActorUI extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent arg0) {
 		if (arg0.getSource() == pig){
 			this.selected = Actor.actorType.PIG;
-		}
-		else if (arg0.getSource() == wolf){
+		} else if (arg0.getSource() == wolf){
 			this.selected = Actor.actorType.WOLF;
-		}
-		else if (arg0.getSource() == owl){
+		} else if (arg0.getSource() == owl){
 			this.selected = Actor.actorType.OWL;
-		}
-		else if (arg0.getSource() == hunter){
+		} else if (arg0.getSource() == hunter){
 			this.selected = Actor.actorType.HUNTER;
-		}
-		else if (arg0.getSource() == deleteAnimal){
+		} else if (arg0.getSource() == deleteAnimal){
 			//Special case, needs to be checked in calling module
 			this.selected = null;
 		}
 	}
-
 }

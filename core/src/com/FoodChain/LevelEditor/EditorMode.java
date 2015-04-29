@@ -31,11 +31,15 @@ public class EditorMode implements Screen{
 	private TileUI tui;
 	private MainUI mui;
 	private ActorUI aui;
+	private PatrolUI pui;
 	private ObjectiveUI oui;
 	private String objective;
-	private enum mode {NONE, PLACE_TILES, PLACE_ACTORS, SET_OBJECTIVES}
+	private enum mode {NONE, PLACE_TILES, PLACE_ACTORS, OBJECTIVE_MODE, PATROL_MODE}
 	private mode currentMode;
 	private Vector2 tmp;
+	
+	//For only drawing the selected animal's patrol path
+	private int selectedAnimalIndex = -1;
 	
 	/**Variables ot handle autosave
 	Autosave happens every 30 seconds
@@ -46,12 +50,33 @@ public class EditorMode implements Screen{
 	boolean changed;
 	
 	private String BLACKBAR = "assets/blackbar.png";
+	private String FLAG1 = "assets/flag1.png";
+	private String FLAG2 = "assets/flag2.png";
+	private String FLAG3 = "assets/flag3.png";
+	private String FLAG4 = "assets/flag4.png";
+	private String SELECTION = "assets/selection.png";
+	
 	private Texture blackbar_tex;
+	private Texture flag1;
+	private Texture flag2;
+	private Texture flag3;
+	private Texture flag4;
+	private Texture selection;
 	
 	private void LoadContent(AssetManager manager){
 		manager.load(BLACKBAR, Texture.class);
+		manager.load(FLAG1, Texture.class);
+		manager.load(FLAG2, Texture.class);
+		manager.load(FLAG3, Texture.class);
+		manager.load(FLAG4, Texture.class);
+		manager.load(SELECTION, Texture.class);
 		manager.finishLoading();
-		blackbar_tex = (Texture) ((manager.isLoaded(BLACKBAR)) ? manager.get(BLACKBAR) : null);
+		blackbar_tex = (Texture) ((manager.isLoaded(BLACKBAR)) ? manager.get(BLACKBAR) 	: null);
+		flag1		 = (Texture) ((manager.isLoaded(FLAG1)) 	   ? manager.get(FLAG1) 		: null);
+		flag2		 = (Texture) ((manager.isLoaded(FLAG2)) 	   ? manager.get(FLAG2) 		: null);
+		flag3		 = (Texture) ((manager.isLoaded(FLAG3)) 	   ? manager.get(FLAG3) 		: null);
+		flag4		 = (Texture) ((manager.isLoaded(FLAG4)) 	   ? manager.get(FLAG4) 		: null);
+		selection 	 = (Texture) ((manager.isLoaded(SELECTION))? manager.get(SELECTION) : null);
 	}
 	
 	public EditorMode(GameCanvas canvas){
@@ -89,11 +114,17 @@ public class EditorMode implements Screen{
 		aui.setSize(600,200);
 		aui.setLocation(0,310);
 		
-		//Objective ui
+		//Objective UI
 		oui = new ObjectiveUI();
 		oui.setTitle("Objectives");
 		oui.setSize(600,200);
 		oui.setLocation(0,310);
+		
+		//Patrol UI
+		pui = new PatrolUI();
+		pui.setTitle("Patrol Paths");
+		pui.setSize(600,200);
+		pui.setLocation(0,310);
 	}
 	
 	private void initializeDefaultMap(){
@@ -106,9 +137,10 @@ public class EditorMode implements Screen{
 		
 		List<Actor.actorType> animals = new ArrayList<Actor.actorType>();
 		List<Vector2> coordinates = new ArrayList<Vector2>();
+		List<List<Vector2>> patrolPaths = new ArrayList<List<Vector2>>();
 		Vector2 defaultHunterStart = new Vector2(16, 8);
 		
-		map = new GameMap(layout, animals, coordinates, defaultHunterStart, objective);
+		map = new GameMap(layout, animals, coordinates, patrolPaths, defaultHunterStart, objective);
 	}
 	
 	private void addBoundary(GameMap map){
@@ -160,41 +192,63 @@ public class EditorMode implements Screen{
 	private void updatePositionsForBoundary(int arg){
 		if (arg != 0 && arg != 1) throw new IllegalArgumentException();
 		int offset = (arg == 0) ? BOUNDARY_TREE_TILES : -1*BOUNDARY_TREE_TILES;
+		
+		//Animal coordinates
 		List<Vector2> coords = map.getCoordinates();
 		Iterator<Vector2> it = coords.iterator();
 		while (it.hasNext()){
 			Vector2 curr = it.next();
 			curr.add(offset, offset);
 		}
+		
+		//Hunter
 		Vector2 hunterCoords = map.getHunterStartingCoordinate();
 		hunterCoords.add(offset,offset);
+		
+		//Waypoints
+		List<List<Vector2>> patrolPaths = map.getPatrolPaths();
+		Iterator<List<Vector2>> it1 = patrolPaths.iterator();
+		while (it1.hasNext()){
+			List<Vector2> currPath = it1.next();
+			Iterator<Vector2> it2 = currPath.iterator();
+			while (it2.hasNext()){
+				Vector2 curr = it2.next();
+				curr.add(offset, offset);
+			}
+		}
 	}
 	
 	private void save(String filename){
 		
+		//Should not be reachable
 		if (map.getHunterStartingCoordinate() == null){
 			JOptionPane.showMessageDialog(null, "No hunter on map. Save aborted");
 			return;
 		}
+		
 		addBoundary(map);
 		updatePositionsForBoundary(ADD_BOUNDARY_OFFSET);
 		
 		try {
-			//System.out.println(map.toString());
 			MapManager.MapToGson(map, filename);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println("Problem saving map. Contact Kevin");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			System.out.println("Problem saving map. Contact Kevin");
 			e.printStackTrace();
 		}
 		
-		//Don't spam the console for autosaves
+		//For non-autosaves, print the layout to the console
+		//Also check for an objective that isn't 0 pigs and 0 wolves
 		if (!filename.equals("autosave")){
 			System.out.println(map.toString());
+			if (map.getObjective().equals("0&0")){
+				JOptionPane.showMessageDialog(null, 
+						"Objective is set to 0 pigs and 0 wolves.\n"
+					  + "The map has been saved, but this level will "
+					  + "NOT load properly into FoodChain.");
+			}
 		}
 		
 		//Remove boundary so the editor doesn't freak out
@@ -251,19 +305,31 @@ public class EditorMode implements Screen{
 			aui.setVisible(false);
 			tui.setVisible(true);
 			oui.setVisible(false);
+			pui.setVisible(false);
+			selectedAnimalIndex = -1;
 			break;
 		case ACTOR_MODE:
 			currentMode = mode.PLACE_ACTORS;
 			aui.setVisible(true);
 			tui.setVisible(false);
 			oui.setVisible(false);
+			pui.setVisible(false);
+			selectedAnimalIndex = -1;
 			break;
 		case OBJECTIVE_MODE:
-			currentMode = mode.SET_OBJECTIVES;
+			currentMode = mode.OBJECTIVE_MODE;
 			aui.setVisible(false);
 			tui.setVisible(false);
 			oui.setVisible(true);
+			pui.setVisible(false);
+			selectedAnimalIndex = -1;
 			break;
+		case PATROL_MODE:
+			currentMode = mode.PATROL_MODE;
+			aui.setVisible(false);
+			tui.setVisible(false);
+			oui.setVisible(false);
+			pui.setVisible(true);
 		default:
 			//Do nothing
 			break;
@@ -293,6 +359,7 @@ public class EditorMode implements Screen{
 		//Iterate through coordinates, find right one then delete
 		List<Vector2> coordinates = map.getCoordinates();
 		List<Actor.actorType> animals = map.getActorTypeList();
+		List<List<Vector2>> patrolPaths = map.getPatrolPaths();
 		tmp.set(mapX, mapY);
 		int index = -1;
 		for (int i = 0; i < coordinates.size(); ++i){
@@ -305,8 +372,24 @@ public class EditorMode implements Screen{
 		else{
 			coordinates.remove(index);
 			animals.remove(index);
+			patrolPaths.remove(index);
 		}
 		
+	}
+	
+	public int waypointNumToInt(PatrolUI.command com){
+		switch(com){
+		case WP1: 
+			return 1;
+		case WP2:
+			return 2;
+		case WP3:
+			return 3;
+		case WP4:
+			return 4;
+		default:
+			return -1;
+		}
 	}
 	
 	public void update(float delta){
@@ -325,6 +408,10 @@ public class EditorMode implements Screen{
 		int yPos = Gdx.graphics.getHeight() - Gdx.input.getY();
 		//If the left mouse button isn't being pressed, no need to update anything
 		//The same is true if the current mode is NONE
+		
+		//One exception is for clearing waypoints, in which case the screen must be updated
+		//even if the user hasn't clicked on it.
+		
 		if (!Gdx.input.isButtonPressed(Input.Buttons.LEFT) || 
 			this.currentMode == mode.NONE){
 			return;
@@ -353,22 +440,124 @@ public class EditorMode implements Screen{
 					//Add animal
 					List<Actor.actorType> newAnimalList = map.getActorTypeList();
 					newAnimalList.add(selected);
-					//map.setActorTypeList(newAnimalList);
 					
 					//Add Coordinate
 					Vector2 newCoordinate = new Vector2(mapX, mapY);
 					List<Vector2> newCoordinates = map.getCoordinates();
 					newCoordinates.add(newCoordinate);
-					//map.setCoordinates(newCoordinates);
+					
+					//Add patrol path
+					List<List<Vector2>> patrolPaths = map.getPatrolPaths();
+					patrolPaths.add(new ArrayList<Vector2>());	//Paths must be made in patrol mode
 				}
 			}
 		}
+		else if (currentMode == mode.PATROL_MODE){
+			PatrolUI.command com = pui.getCommand();
+			mapX = map.screenXToMap(xPos);
+			mapY = map.screenYToMap(yPos);
+			if (com == PatrolUI.command.NONE) return;
+			if (com == PatrolUI.command.SELECT){
+				List<Vector2> coordinates = map.getCoordinates();
+				tmp.set(mapX, mapY);
+				int index = -1;
+				for (int i = 0; i < coordinates.size(); ++i){
+					if (coordinates.get(i).equals(tmp)){
+						index = i;
+						break;
+					}
+				}
+				if (index != -1){
+					selectedAnimalIndex = index;
+					//Now we can add to this naimal's patrol paths
+				}
+			}
+			else if (com == PatrolUI.command.CLEAR){
+				if (selectedAnimalIndex == -1){
+					JOptionPane.showMessageDialog(null, "No animal selected");
+					return;
+				} else{
+					map.getPatrolPaths().get(selectedAnimalIndex).clear();
+				}
+			}
+			//If the command is waypoint placement
+			else{
+				if (selectedAnimalIndex == -1){
+					JOptionPane.showMessageDialog(null, "No animal selected.");
+					return;
+				} else{
+					List<Vector2> waypoints = map.getPatrolPaths().get(selectedAnimalIndex);
+					//Do not let the user add a waypoint if the previous ones haven't been set
+					if (waypointNumToInt(com) > waypoints.size()+1){
+						JOptionPane.showMessageDialog(null, "Previous waypoints have not been set");
+					} else{
+						//If list isn't long enough, add new waypoint to it
+						if (waypointNumToInt(com) == waypoints.size()+1){
+							waypoints.add(new Vector2(mapX, mapY));
+						}
+						//otherwise, overwrite old one
+						else{
+							waypoints.get(waypointNumToInt(com)-1).set(mapX,mapY);
+						}
+					}
+					
+					//FOR DEBUGGING ONLY
+					if (waypoints.size() > 4){
+						System.out.println("Waypoint length is bugged: " + waypoints.size());
+					}
+					for (int i = 0; i < waypoints.size(); ++i){
+						if (waypoints.get(i) == null){
+							System.out.println("Null waypoint detected at index: " + i);
+						} else{
+							System.out.println(waypoints.get(i).toString());
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	private Texture getFlagTexFromIndexNumber(int i){
+		if (i < 0 || i > 3){
+			throw new IllegalArgumentException();
+		}
+		switch(i){
+		case 0:
+			return flag1;
+		case 1:
+			return flag2;
+		case 2:
+			return flag3;
+		default:
+			return flag4;
+		}
+	}
+	/**
+	 * Draw the waypoints for the currently selected animal
+	 * Also draw rectangle around the selected animal
+	 */
+	private void drawWaypoints(){
+		if (selectedAnimalIndex == -1) return;
+		List<Vector2> waypoints = map.getPatrolPaths().get(selectedAnimalIndex);
+		//Size must be in 0...4
+		for (int i = 0; i < waypoints.size(); ++i){
+			Texture tex = getFlagTexFromIndexNumber(i);
+			Vector2 curr = waypoints.get(i);
+			canvas.draw(tex, map.mapXToScreen((int)curr.x), 
+							 map.mapYToScreen((int)curr.y));
+		}
+		
+		Vector2 coord = map.getCoordinates().get(selectedAnimalIndex);
+		canvas.draw(selection, map.mapXToScreen((int)coord.x), 
+				 			   map.mapYToScreen((int)coord.y));
+		
 	}
 	
 	public void draw(float delta){
 		canvas.begin();
 		canvas.draw(blackbar_tex, 0, 0);
 		map.draw(canvas);
+		drawWaypoints();
 		Actor.draw(canvas, map);
 		canvas.end();
 	}

@@ -22,6 +22,7 @@ public class GameMap {
     //the i'th coordinate in coordinates.
     private List<Actor.actorType> animals = null;
     private List<Vector2> coordinates = null;
+    private List<List<Vector2>> patrolPaths = null;
 
     
     //Player information that needs to be stored
@@ -145,11 +146,13 @@ public class GameMap {
     public GameMap(Tile.tileType[][] layout,
                    List<Actor.actorType>animals,
                    List<Vector2> coordinates,
+                   List<List<Vector2>> patrolPaths,
                    Vector2 hunterStartPosition,
                    String objective){
     		this.layout = layout;
         this.animals = animals;
         this.coordinates = coordinates;
+        this.patrolPaths = patrolPaths;
         this.hunterStartPosition = hunterStartPosition;
         this.objective = objective;
     }
@@ -168,9 +171,25 @@ public class GameMap {
                     returnString.append("#");
                 } else if (layout[i][j] == Tile.tileType.TREE){
                     returnString.append("T");
-                } else if (layout[i][j] == Tile.tileType.WATER){
+                } else if (layout[i][j] == Tile.tileType.WATER ||
+                			   layout[i][j] == Tile.tileType.N_SHORE ||
+                			   layout[i][j] == Tile.tileType.NE_SHORE ||
+                			   layout[i][j] == Tile.tileType.E_SHORE ||
+                			   layout[i][j] == Tile.tileType.SE_SHORE ||
+                			   layout[i][j] == Tile.tileType.S_SHORE ||
+                			   layout[i][j] == Tile.tileType.SW_SHORE ||
+                			   layout[i][j] == Tile.tileType.W_SHORE ||
+                			   layout[i][j] == Tile.tileType.NW_SHORE){
                 		returnString.append("W");
-                } else if (layout[i][j] == Tile.tileType.DIRT){
+                } else if (layout[i][j] == Tile.tileType.DIRT ||
+         			   	  layout[i][j] == Tile.tileType.N_GRASS ||
+         			   	  layout[i][j] == Tile.tileType.NE_GRASS ||
+         			   	  layout[i][j] == Tile.tileType.E_GRASS ||
+         			   	  layout[i][j] == Tile.tileType.SE_GRASS ||
+         			   	  layout[i][j] == Tile.tileType.S_GRASS ||
+         			   	  layout[i][j] == Tile.tileType.SW_GRASS ||
+         			   	  layout[i][j] == Tile.tileType.W_GRASS ||
+         			   	  layout[i][j] == Tile.tileType.NW_GRASS){
                 		returnString.append("D");
                 } else if (layout[i][j] == null){
                 		returnString.append("!");
@@ -353,6 +372,14 @@ public class GameMap {
     
     public String getObjective(){
     		return this.objective;
+    }
+    
+    public List<List<Vector2>> getPatrolPaths(){
+    		return this.patrolPaths;
+    }
+    
+    public void setPatrolPaths(List<List<Vector2>> patrolPaths){
+    		this.patrolPaths = patrolPaths;
     }
 		
 	public boolean isSafeAt(float xPos, float yPos) {

@@ -13,7 +13,7 @@ public class MainUI extends JFrame implements ActionListener  {
 
 	public enum command{NO_ACTION, NEW_NOSAVE, NEW_SAVE, 
 						SAVE, LOAD, LOAD_AUTOSAVE, TILE_MODE, 
-						ACTOR_MODE, OBJECTIVE_MODE}
+						ACTOR_MODE, OBJECTIVE_MODE, PATROL_MODE}
 	
 	private static final long serialVersionUID = 1L;
 	private JPanel mainPanel;
@@ -24,6 +24,7 @@ public class MainUI extends JFrame implements ActionListener  {
 	private JButton tileMode;
 	private JButton actorMode;
 	private JButton objectiveMode;
+	private JButton patrolMode;
 	
 	private command com;
 	
@@ -38,11 +39,12 @@ public class MainUI extends JFrame implements ActionListener  {
 		tileMode 	  = new JButton("Tile mode");
 		actorMode	  = new JButton("Actor mode");
 		objectiveMode = new JButton("Objective mode");
+		patrolMode 	  = new JButton("Patrol mode");
 		
-		mainPanel.add(newMap);		mainPanel.add(save);	 	
-		mainPanel.add(load);			mainPanel.add(loadAutosave);
-		mainPanel.add(tileMode);		mainPanel.add(actorMode); 	
-		mainPanel.add(objectiveMode);
+		mainPanel.add(newMap);			mainPanel.add(save);	 	
+		mainPanel.add(load);				mainPanel.add(loadAutosave);
+		mainPanel.add(tileMode);			mainPanel.add(actorMode); 	
+		mainPanel.add(objectiveMode);	mainPanel.add(patrolMode);
 		
 		newMap		 .addActionListener(this);
 		save			 .addActionListener(this);
@@ -51,6 +53,7 @@ public class MainUI extends JFrame implements ActionListener  {
 		tileMode		 .addActionListener(this);
 		actorMode	 .addActionListener(this);
 		objectiveMode.addActionListener(this);
+		patrolMode	 .addActionListener(this);
 		
 		this.add(mainPanel);
 		
@@ -99,6 +102,9 @@ public class MainUI extends JFrame implements ActionListener  {
 		}
 		else if (arg0.getSource() == objectiveMode){
 			this.com = command.OBJECTIVE_MODE;
+		}
+		else if (arg0.getSource() == patrolMode){
+			this.com = command.PATROL_MODE;
 		}
 	}
 
