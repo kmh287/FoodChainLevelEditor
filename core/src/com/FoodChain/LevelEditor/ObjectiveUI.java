@@ -63,7 +63,7 @@ public class ObjectiveUI extends JFrame implements ActionListener{
 			int numWolves = 0;
 			while (true){
 				try{
-					numWolves = Integer.parseInt(JOptionPane.showInputDialog("How many pigs should the hunter catch on this level? (non-negative integer)"));
+					numWolves = Integer.parseInt(JOptionPane.showInputDialog("How many wolves should the hunter catch on this level? (non-negative integer)"));
 					if (numWolves < 0 || numWolves > 100){
 						JOptionPane.showMessageDialog(null, "Integer must be in 0...100");
 					}
