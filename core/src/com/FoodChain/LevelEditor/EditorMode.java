@@ -502,16 +502,16 @@ public class EditorMode implements Screen{
 					}
 					
 					//FOR DEBUGGING ONLY
-					if (waypoints.size() > 4){
-						System.out.println("Waypoint length is bugged: " + waypoints.size());
-					}
-					for (int i = 0; i < waypoints.size(); ++i){
-						if (waypoints.get(i) == null){
-							System.out.println("Null waypoint detected at index: " + i);
-						} else{
-							System.out.println(waypoints.get(i).toString());
-						}
-					}
+//					if (waypoints.size() > 4){
+//						System.out.println("Waypoint length is bugged: " + waypoints.size());
+//					}
+//					for (int i = 0; i < waypoints.size(); ++i){
+//						if (waypoints.get(i) == null){
+//							System.out.println("Null waypoint detected at index: " + i);
+//						} else{
+//							System.out.println(waypoints.get(i).toString());
+//						}
+//					}
 				}
 			}
 		}
