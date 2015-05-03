@@ -139,8 +139,8 @@ public class EditorMode implements Screen{
 		List<Vector2> coordinates = new ArrayList<Vector2>();
 		List<List<Vector2>> patrolPaths = new ArrayList<List<Vector2>>();
 		Vector2 defaultHunterStart = new Vector2(16, 8);
-		
 		map = new GameMap(layout, animals, coordinates, patrolPaths, defaultHunterStart, objective);
+		selectedAnimalIndex = -1;
 	}
 	
 	private void addBoundary(GameMap map){
