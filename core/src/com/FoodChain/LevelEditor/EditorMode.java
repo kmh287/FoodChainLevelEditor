@@ -267,6 +267,7 @@ public class EditorMode implements Screen{
 		}
 		removeBoundary(map);
 		updatePositionsForBoundary(REMOVE_BOUNDARY_OFFSET);
+		oui.setObjectiveString(map.getObjective());
 	}
 	
 	private void handleMainUICommand(){

@@ -86,6 +86,10 @@ public class ObjectiveUI extends JFrame implements ActionListener{
 	public String getObjectiveString(){
 		return objective;
 	}
+	
+	public void setObjectiveString(String obj){
+		objective = obj;
+	}
 
 	private int getNum(int animalType) {
 		//String is guaranteed to only have ints, so no need for try/catch
