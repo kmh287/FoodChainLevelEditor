@@ -448,7 +448,14 @@ public class EditorMode implements Screen{
 					
 					//Add patrol path
 					List<List<Vector2>> patrolPaths = map.getPatrolPaths();
-					patrolPaths.add(new ArrayList<Vector2>());	//Paths must be made in patrol mode
+					List<Vector2> path = new ArrayList<Vector2>();
+					if(selected == Actor.actorType.OWL){
+						//Add two waypoints in on top of the owl
+						//This saves the user form having to put this into the level
+						path.add(new Vector2(mapX, mapY));
+						path.add(new Vector2(mapX, mapY));
+					}
+					patrolPaths.add(path);	//Paths must be made in patrol mode
 				}
 			}
 		}
