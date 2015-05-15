@@ -45,7 +45,7 @@ public class TileUI extends JFrame implements ActionListener {
 		water 		= new JButton("WATER");
 		dirt 		= new JButton("DIRT");
 		water_n 		= new JButton("WATER_N");
-		water_ne 	= new JButton("WTER_NE");
+		water_ne 	= new JButton("WATER_NE");
 		water_e 		= new JButton("WATER_E");
 		water_se 	= new JButton("WATER_SE");
 		water_s 		= new JButton("WATER_S");
