@@ -54,6 +54,10 @@ public class EditorMode implements Screen{
 	private String FLAG2 = "assets/flag2.png";
 	private String FLAG3 = "assets/flag3.png";
 	private String FLAG4 = "assets/flag4.png";
+	private String FLAG5 = "assets/flag5.png";
+	private String FLAG6 = "assets/flag6.png";
+	private String FLAG7 = "assets/flag7.png";
+	private String FLAG8 = "assets/flag8.png";
 	private String SELECTION = "assets/selection.png";
 	
 	private Texture blackbar_tex;
@@ -61,6 +65,10 @@ public class EditorMode implements Screen{
 	private Texture flag2;
 	private Texture flag3;
 	private Texture flag4;
+	private Texture flag5;
+	private Texture flag6;
+	private Texture flag7;
+	private Texture flag8;
 	private Texture selection;
 	
 	private void LoadContent(AssetManager manager){
@@ -69,6 +77,10 @@ public class EditorMode implements Screen{
 		manager.load(FLAG2, Texture.class);
 		manager.load(FLAG3, Texture.class);
 		manager.load(FLAG4, Texture.class);
+		manager.load(FLAG5, Texture.class);
+		manager.load(FLAG6, Texture.class);
+		manager.load(FLAG7, Texture.class);
+		manager.load(FLAG8, Texture.class);
 		manager.load(SELECTION, Texture.class);
 		manager.finishLoading();
 		blackbar_tex = (Texture) ((manager.isLoaded(BLACKBAR)) ? manager.get(BLACKBAR) 	: null);
@@ -76,6 +88,10 @@ public class EditorMode implements Screen{
 		flag2		 = (Texture) ((manager.isLoaded(FLAG2)) 	   ? manager.get(FLAG2) 		: null);
 		flag3		 = (Texture) ((manager.isLoaded(FLAG3)) 	   ? manager.get(FLAG3) 		: null);
 		flag4		 = (Texture) ((manager.isLoaded(FLAG4)) 	   ? manager.get(FLAG4) 		: null);
+		flag5		 = (Texture) ((manager.isLoaded(FLAG5)) 	   ? manager.get(FLAG5) 		: null);
+		flag6		 = (Texture) ((manager.isLoaded(FLAG6)) 	   ? manager.get(FLAG6) 		: null);
+		flag7		 = (Texture) ((manager.isLoaded(FLAG7)) 	   ? manager.get(FLAG7) 		: null);
+		flag8		 = (Texture) ((manager.isLoaded(FLAG8)) 	   ? manager.get(FLAG8) 		: null);
 		selection 	 = (Texture) ((manager.isLoaded(SELECTION))? manager.get(SELECTION) : null);
 	}
 	
@@ -388,6 +404,14 @@ public class EditorMode implements Screen{
 			return 3;
 		case WP4:
 			return 4;
+		case WP5:
+			return 5;
+		case WP6:
+			return 6;
+		case WP7:
+			return 7;
+		case WP8:
+			return 8;
 		default:
 			return -1;
 		}
@@ -526,7 +550,7 @@ public class EditorMode implements Screen{
 	}
 	
 	private Texture getFlagTexFromIndexNumber(int i){
-		if (i < 0 || i > 3){
+		if (i < 0 || i > 7){
 			throw new IllegalArgumentException();
 		}
 		switch(i){
@@ -536,8 +560,16 @@ public class EditorMode implements Screen{
 			return flag2;
 		case 2:
 			return flag3;
-		default:
+		case 3:
 			return flag4;
+		case 4:
+			return flag5;
+		case 5:
+			return flag6;
+		case 6:
+			return flag7;
+		default:
+			return flag8;
 		}
 	}
 	/**
